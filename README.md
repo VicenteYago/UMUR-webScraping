@@ -1,3 +1,0 @@
-# UMUR-webScraping
-
-# WIP

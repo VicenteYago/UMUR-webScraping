@@ -1,0 +1,43 @@
+---
+title: "Scrapig simple y avanzado"
+author: "Jose Vicente Yago Martinez"
+output: revealjs::revealjs_presentation
+---
+
+## Introducción
+
+ - que es el web scraping
+ - origenes
+ - aplicaciones
+ 
+***
+## Componentes de una pagina web
+ - HTML 
+ - DOM
+ - CSS
+
+
+***
+## Scraping simple - RVEST
+
+ - scraping example of meteo data
+
+
+***
+## Scraping avanzado - RSelenium
+
+ - scraping example of dinamic data
+
+
+***
+## Conclusiones
+
+ - bot scrapeo ps5 + telegram bot
+
+
+***
+GRACIAS!
+
+
+
+
