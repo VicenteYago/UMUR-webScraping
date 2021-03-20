@@ -1,38 +1,44 @@
 ---
 title: "Scrapig simple y avanzado"
 author: "Jose Vicente Yago Martinez"
-output: revealjs::revealjs_presentation
+output: 
+  revealjs::revealjs_presentation:
+    transition: none
 ---
 
 ## Introducción
 
- - que es el web scraping
- - origenes
- - aplicaciones
- 
+
+
+***
+### ¿Que es el web scraping?
+
+
+
 ***
 ## Componentes de una pagina web
- - HTML 
- - DOM
- - CSS
 
 
+***
+### Paquetes relevantes en R
+
+s
 ***
 ## Scraping simple - RVEST
 
- - scraping example of meteo data
+***
 
 
 ***
 ## Scraping avanzado - RSelenium
 
+***
  - scraping example of dinamic data
 
 
 ***
 ## Conclusiones
 
- - bot scrapeo ps5 + telegram bot
 
 
 ***
