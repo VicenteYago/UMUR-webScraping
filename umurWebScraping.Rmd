@@ -1,0 +1,85 @@
+---
+title: "UmurWebScraping"
+author: "Jose Vicent Yago Martinez"
+date: "3/21/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(rvest)
+library(tidyverse)
+library(RSelenium)
+source("./scrapingSimple.R")
+```
+
+
+# Rvest
+
+```{r}
+scrapeJson('https://www.pccomponentes.com/cecotec-powergear-1500-xl-pro-batidora-de-mano-1500w',
+           '//*[@id="microdata-product-script"]/text()') -> batidora
+
+
+scrapeJson('https://www.pccomponentes.com/sony-playstation-5-digital-sony-dualsense-mando-inalambrico-para-ps5',
+           '//*[@id="microdata-product-script"]/text()') -> ps5
+```
+
+
+```{r}
+scrapeTable('https://es.wikipedia.org/wiki/Tabla_peri%C3%B3dica_de_los_elementos',
+            '/html/body/div[3]/div[3]/div[5]/div[1]/table[3]')
+
+scrapeTable('https://es.wikipedia.org/wiki/Grupo_sangu%C3%ADneo',
+            '/html/body/div[3]/div[3]/div[5]/div[1]/table[3]')
+```
+
+
+
+# RSelenium
+
+https://cran.r-project.org/web/packages/RSelenium/vignettes/basics.html
+https://docs.ropensci.org/RSelenium/articles/docker.html#introduction-1
+
+docker run -d -p 5901:5900 -p 127.0.0.1:4445:4444 selenium/standalone-firefox-debug
+
+abrir TigerVNC 
+  -  localhost::5900 o localhost::5901
+  -  pass: secret
+
+
+```{r}
+remDr <- remoteDriver(
+  remoteServerAddr = "localhost",
+  port = 4445L,
+  browserName = "firefox"
+)
+```
+
+```{r}
+remDr$open()
+```
+
+```{r}
+remDr$getStatus()
+```
+
+
+```{r}
+remDr$navigate("https://www.google.com")
+Sys.sleep(2)
+remDr$navigate("https://www.pccomponentes.com/sony-playstation-5-digital-sony-dualsense-mando-inalambrico-para-ps5")
+Sys.sleep(2)
+webElement<- remDr$findElement(using = 'css selector', value = 'html.webFont body#ficha-producto.ficha-producto.lang-es header.c-main-header div.c-main-header__col.c-main-header__col--end ul.c-user-menu.js-user-menu li.c-user-menu__item.c-user-menu__vertical_center a.c-user-menu__link.qa-user-login-button')
+webElement$highlightElement()
+Sys.sleep(2)
+webElement$clickElement()
+Sys.sleep(2)
+```
+
+
+
+
