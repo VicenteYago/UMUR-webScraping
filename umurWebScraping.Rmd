@@ -41,6 +41,7 @@ scrapeTable('https://es.wikipedia.org/wiki/Grupo_sangu%C3%ADneo',
 
 # RSelenium
 
+# Set up
 https://cran.r-project.org/web/packages/RSelenium/vignettes/basics.html
 https://docs.ropensci.org/RSelenium/articles/docker.html#introduction-1
 
@@ -67,6 +68,7 @@ remDr$open()
 remDr$getStatus()
 ```
 
+# Ejemplo de navegacion
 
 ```{r}
 remDr$navigate("https://www.google.com")
