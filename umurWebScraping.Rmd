@@ -13,41 +13,79 @@ knitr::opts_chunk$set(echo = TRUE)
 library(rvest)
 library(tidyverse)
 library(RSelenium)
-source("./scrapingSimple.R")
+source("./scrapingSimple.R") 
 ```
 
 
+En este documento se ilustran las ejemplos de web scraping usados en la presentación para UMUR.
+
 # Rvest
+
+## JSONs
 
 ```{r}
 scrapeJson('https://www.pccomponentes.com/cecotec-powergear-1500-xl-pro-batidora-de-mano-1500w',
            '//*[@id="microdata-product-script"]/text()') -> batidora
-
-
-scrapeJson('https://www.pccomponentes.com/sony-playstation-5-digital-sony-dualsense-mando-inalambrico-para-ps5',
-           '//*[@id="microdata-product-script"]/text()') -> ps5
+batidora
 ```
 
 
 ```{r}
-scrapeTable('https://es.wikipedia.org/wiki/Tabla_peri%C3%B3dica_de_los_elementos',
-            '/html/body/div[3]/div[3]/div[5]/div[1]/table[3]')
-
-scrapeTable('https://es.wikipedia.org/wiki/Grupo_sangu%C3%ADneo',
-            '/html/body/div[3]/div[3]/div[5]/div[1]/table[3]')
+scrapeJson('https://www.pccomponentes.com/sony-playstation-5-digital-sony-dualsense-mando-inalambrico-para-ps5',
+           '//*[@id="microdata-product-script"]/text()') -> ps5
+ps5
 ```
 
+## Tablas 
+ 
+### wikipedia
+```{r}
+scrapeTable('https://es.wikipedia.org/wiki/Tabla_peri%C3%B3dica_de_los_elementos',
+            '/html/body/div[3]/div[3]/div[5]/div[1]/table[3]') -> tablaPeriodica
+tablaPeriodica
+```
+
+```{R}
+scrapeTable('https://es.wikipedia.org/wiki/Grupo_sangu%C3%ADneo',
+            '/html/body/div[3]/div[3]/div[5]/div[1]/table[3]') -> gruposSang
+gruposSang
+```
+### IMIDA
+
+Crear tablas insertando los campos manualmente:
+
+```{r}
+CULTIVO = "00023"
+VARIEDAD = "001"
+ESTACION = "JU42"
+paste(
+  paste(
+    paste("http://siam.imida.es/apex/f?p=101:333:5267927739015372::::CULTIVO,VARIEDAD,ESTACION:",
+      CULTIVO, sep=""),
+      VARIEDAD, sep=","),
+      ESTACION,sep=",") -> url
+
+scrapeTable(url, xpath = '//*[@id="1377311874100365"]')
+```
+
+Crear tablas directamente con la url:
+
+```{r}
+
+scrapeTable(url = 'http://siam.imida.es/apex/f?p=101:333:5238937265572371::::CULTIVO,VARIEDAD,ESTACION:00025,001,MU62',
+            xpath = '//*[@id="1377311874100365"]')
+```
 
 
 # RSelenium
 
-# Set up
+## Configuración
 https://cran.r-project.org/web/packages/RSelenium/vignettes/basics.html
 https://docs.ropensci.org/RSelenium/articles/docker.html#introduction-1
 
 docker run -d -p 5901:5900 -p 127.0.0.1:4445:4444 selenium/standalone-firefox-debug
 
-abrir TigerVNC 
+en TigerVNC o similar
   -  localhost::5900 o localhost::5901
   -  pass: secret
 
@@ -68,19 +106,122 @@ remDr$open()
 remDr$getStatus()
 ```
 
-# Ejemplo de navegacion
+## Ejemplo 1 - PCCOMPONENTES
 
 ```{r}
 remDr$navigate("https://www.google.com")
-Sys.sleep(2)
+Sys.sleep(1)
 remDr$navigate("https://www.pccomponentes.com/sony-playstation-5-digital-sony-dualsense-mando-inalambrico-para-ps5")
-Sys.sleep(2)
-webElement<- remDr$findElement(using = 'css selector', value = 'html.webFont body#ficha-producto.ficha-producto.lang-es header.c-main-header div.c-main-header__col.c-main-header__col--end ul.c-user-menu.js-user-menu li.c-user-menu__item.c-user-menu__vertical_center a.c-user-menu__link.qa-user-login-button')
+Sys.sleep(1)
+webElement<- remDr$findElement(using = 'css selector',
+                               value = 'html.webFont body#ficha-producto.ficha-producto.lang-es header.c-main-header div.c-main-header__col.c-main-header__col--end ul.c-user-menu.js-user-menu li.c-user-menu__item.c-user-menu__vertical_center a.c-user-menu__link.qa-user-login-button')
 webElement$highlightElement()
-Sys.sleep(2)
+Sys.sleep(1)
 webElement$clickElement()
-Sys.sleep(2)
+Sys.sleep(1)
 ```
+
+
+
+## Ejemplo 2 - IMIDA
+
+
+```{r}
+url <- "http://siam.imida.es/apex/f?p=101:39:5267927739015372::NO::P39_MOSTRAR_DATOS:0"
+web <- read_html(url, as.data.frame=T, stringsAsFactors = TRUE)
+```
+
+Extraemos los nombres de todos los cultivos disponibles
+```{r}
+web %>% 
+  html_nodes("option") %>% html_text %>% .[2:length(.)] -> texts
+
+CULTIVOS.n <- texts[1:43]
+```
+
+IDs de cultivos y variedades, a traves de diferentes nodos HTML y XML se llegan a los IDs de cultivo y variedad. Este codigo es totalmente
+dependiente de la arquitectura de la pagina web.
+
+```{r}
+web %>% 
+  html_nodes("#P39_CULTIVO_VARIEDAD") %>% .[[1]] %>% html_nodes("option") %>%
+  xml_cdata %>% tail(length(.)-1) %>% lapply(function(x){
+    return(xml_attr(x, "value") %>% as.character() )}) %>% unlist() -> option_values
+
+option_values %>% lapply(function(x){
+  return(
+          list(
+              cultivo  = str_sub(x, -9, -5),
+              variedad = str_sub(x, -3, -1)
+              )
+         )
+}) -> cultivos_variedad
+
+
+cultivosIMIDA <-setNames(cultivos_variedad, CULTIVOS.n)
+```
+
+
+Demostracion visual de como Selenium va navegando por los combobox's para generar todas las combinaciones posibles de tablas:
+
+```{r}
+i <- 1
+
+for (option_value in option_values){
+  remDr$navigate(url)
+  
+  # SELECCIONAR CULTIVO
+  webElem<-remDr$findElement(using = "css selector", "#P39_CULTIVO_VARIEDAD")
+  webElem$highlightElement()
+  res <- remDr$findElement(using = 'xpath',
+                           value = sprintf("//*/option[@value = '%s']", option_value) )
+  
+  res$clickElement()
+  remDr$getPageSource() %>% .[[1]] %>% 
+    read_html(as.data.frame=T, stringsAsFactors = TRUE) %>%
+      html_node("#P39_ESTACION") %>% 
+        html_children() %>% 
+          xml_text() %>% .[2:length(.)] -> cultivosIMIDA[[i]]$estaciones.nombre 
+
+  # GUARDAR TODAS LAS ESTACIONES ASOCIADAS
+  cultivosIMIDA[[i]]$estaciones <- str_sub(cultivosIMIDA[[i]]$estaciones.nombre, 0, 4)
+  print(cultivosIMIDA[[i]]$cultivo)
+  print(cultivosIMIDA[[i]]$estaciones)
+
+  # SELECCIONAR ESTACIONES
+  for (j in 1:length(cultivosIMIDA[[i]]$estaciones)) {
+    webElem<-remDr$findElement(using = "css selector", '#P39_ESTACION')
+    webElem$highlightElement()
+    res <- remDr$findElement(using = 'xpath',
+                             value = sprintf("//*/option[@value = '%s']", cultivosIMIDA[[i]]$estaciones[j]) )
+     res$clickElement() 
+     
+     res <- remDr$findElement(using = 'xpath',
+                               value = '//*[@id="#REGION_ID#"]/tbody/tr[2]/td[2]/div/a/span')
+     res$clickElement()
+     Sys.sleep(runif(1,min=1,max=2))
+  }    
+  
+  i <- i+1    
+
+  Sys.sleep(runif(1,min=1,max=5))
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

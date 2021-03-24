@@ -8,8 +8,8 @@ scrapeJson <- function(url, xpath){
     html_text() %>% jsonlite::fromJSON()  
 }
 
-scrapeTable <- function(url, xpath){
+scrapeTable <- function(url, xpath, fill=F){
   read_html(url) %>% 
     html_nodes(xpath = xpath) %>%  
-    html_table() %>% .[[1]]
+    html_table(fill) %>% .[[1]]
 }
