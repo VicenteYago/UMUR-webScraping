@@ -7,7 +7,7 @@ Material para la charla corta "Web Scraping Simple y Avanzado", presentada el 25
 
 En el documento .Rmd puede verse ejemplos de: 
 
-- Scrapeo de [pccomponentes](https://www.pccomponentes.com/?a=60999756&gclsrc=ds) para consultar disponibilida de Ps5, hecho con Rvest.
-- Generacion por fuerza bruta de todas las combinaciones de coeficientes de cultivo de la web del [SIAM](http://siam.imida.es/apex/f?p=101:39:6766795538999), hecho on RSelenium.
+- Scrapeo de [pccomponentes](https://www.pccomponentes.com/?a=60999756&gclsrc=ds) para consultar disponibilidad de Ps5, hecho con Rvest.
+- Generación por fuerza bruta de todas las combinaciones de coeficientes de cultivo de la web del [SIAM](http://siam.imida.es/apex/f?p=101:39:6766795538999), hecho con RSelenium.
 
 
