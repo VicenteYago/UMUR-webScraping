@@ -33,7 +33,11 @@ batidora
 ```{r}
 scrapeJson('https://www.pccomponentes.com/sony-playstation-5-digital-sony-dualsense-mando-inalambrico-para-ps5',
            '//*[@id="microdata-product-script"]/text()') -> ps5
-ps5
+
+
+sprintf("PRECIO : %s %s", ps5$offers$price, ps5$offers$priceCurrency)
+sprintf("DISPONIBLE? : %s", ps5$offers$availability)
+sprintf("COMENTARIO 1: %s", ps5$review$reviewBody[1])
 ```
 
 ## Tablas 
@@ -85,10 +89,6 @@ https://docs.ropensci.org/RSelenium/articles/docker.html#introduction-1
 
 docker run -d -p 5901:5900 -p 127.0.0.1:4445:4444 selenium/standalone-firefox-debug
 
-en TigerVNC o similar
-  -  localhost::5900 o localhost::5901
-  -  pass: secret
-
 
 ```{r}
 remDr <- remoteDriver(
@@ -97,6 +97,10 @@ remDr <- remoteDriver(
   browserName = "firefox"
 )
 ```
+
+en TigerVNC o similar
+  -  localhost::5900 o localhost::5901
+  -  pass: secret
 
 ```{r}
 remDr$open()
