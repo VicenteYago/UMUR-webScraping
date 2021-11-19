@@ -10,4 +10,4 @@ En el documento .Rmd puede verse ejemplos de:
 - Scrapeo de [pccomponentes](https://www.pccomponentes.com/?a=60999756&gclsrc=ds) para consultar disponibilidad de Ps5, hecho con Rvest.
 - Generación por fuerza bruta de todas las combinaciones de coeficientes de cultivo de la web del [SIAM](http://siam.imida.es/apex/f?p=101:39:6766795538999), hecho con RSelenium.
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=4i9YKPiVIrg&t=18s)
+[![IMAGE ALT TEXT HERE](https://github.com/VicenteYago/UMUR-webScraping/blob/main/media/img/yt.png)](https://www.youtube.com/watch?v=4i9YKPiVIrg&t=18s)
