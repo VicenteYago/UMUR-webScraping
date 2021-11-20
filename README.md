@@ -3,7 +3,7 @@
 
 Grabacion disponible en YouTube: 
 
-[![IMAGE ALT TEXT HERE](https://github.com/VicenteYago/UMUR-webScraping/blob/main/media/img/yt.png)](https://www.youtube.com/watch?v=4i9YKPiVIrg&t=18s)
+[![IMAGE ALT TEXT HERE](https://github.com/VicenteYago/UMUR-webScraping/blob/main/media/img/yt.png)](https://www.youtube.com/watch?v=4i9YKPiVIrg&t=120s)
 
 
 Material para la charla corta "Web Scraping Simple y Avanzado", presentada el 25-03-2021 para la asociacion [UMUR](https://gauss.inf.um.es/umur/).
